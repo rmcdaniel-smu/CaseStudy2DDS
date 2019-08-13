@@ -24,12 +24,4 @@ ncol(train)
 view(train)
 skim(train)
 
-#CV datasets
-##TrainObs
-TrainObs = sample(seq(1,dim(train)[1]),round(.25*dim(train)[1]),replace = FALSE)
-drop<- c(536,322,429,818,89,626,560,38,257,707,725,250)
-TrainObs = TrainObs[,!(names(TrainObs) %in% drop)]
-names(TrainObs)
-AttritionTrain = train[TrainObs,]
-##TestObs
-TestObs = sample(seq(1,dim(train)[1]),round(.09*dim(train)[1]),replace = FALSE)
+
