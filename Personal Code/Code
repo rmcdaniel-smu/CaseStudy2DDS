@@ -1,4 +1,5 @@
 
+
 library(tidyverse) #general data wrangling tools
 library(skimr) #summary stats
 library(tangram) #has is.categorical() function, useful for creating tables
@@ -24,4 +25,48 @@ ncol(train)
 view(train)
 skim(train)
 
+NewTrain <- train[c('Attrition','Age','DistanceFromHome', 'Education', 'EnvironmentSatisfaction', 'JobInvolvement', 'JobLevel','JobSatisfaction', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike', 'PerformanceRating', 'RelationshipSatisfaction', 'StockOptionLevel','TotalWorkingYears', 'TrainingTimesLastYear', 'WorkLifeBalance', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager')]
+names(NewTrain)
+ncol(NewTrain)
+view(NewTrain)
+skim(NewTrain)
 
+#Normalize data
+normalize <-function(x){
+  return((x-min(x))/(max(x)-min(x)))}
+trainNorm <- as.data.frame(lapply(NewTrain[-1], normalize))
+str(trainNorm)
+ncol(trainNorm)
+view(trainNorm)
+skim(NewTrain)
+summary(NewTrain)
+#Create Training and Test datasets
+set.seed(1)
+TrainObs=sample(seq(1,dim(trainNorm)[1]), round(.75*dim(trainNorm)[1]), replace = FALSE)
+TrainFinal=trainNorm[TrainObs,]
+str(TrainFinal)
+ncol(TrainFinal)
+view(TrainFinal)
+skim(NewTrain)
+TestFinal=trainNorm[-TrainObs,]
+str(TestFinal)
+ncol(TestFinal)
+view(TestFinal)
+skim(TestFinal)
+TrainFinal_labels <-train[TrainObs,3]
+TestFinal_labels <-train[TrainObs, 3]
+TrainFinal_labels
+TestFinal_labels
+
+
+#Train the model
+#install.packages("class")
+library(class)
+AttritionTest_pred <- knn(train = TrainFinal, test = TestFinal,cl = TrainFinal_labels, k=19)
+AttritionTest_pred
+#table(TestFinal_labels,AttritionTest_pred)
+
+#Evaluate the model
+#install.packages("gmodels")
+library(gmodels)
+CrossTable(x = TestFinal_labels, y = AttritionTest_pred, prop.chisq = FALSE)
