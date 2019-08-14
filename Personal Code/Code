@@ -1,7 +1,4 @@
 
-
-
-
 library(tidyverse) #general data wrangling tools
 library(skimr) #summary stats
 library(tangram) #has is.categorical() function, useful for creating tables
@@ -28,6 +25,7 @@ view(train)
 skim(train)
 
 #Remove factored variables and other non-useful variables
+##NewTrain <- train[c('Attrition','Age','DistanceFromHome', 'Education', 'EnvironmentSatisfaction', 'JobInvolvement', 'JobLevel','JobSatisfaction', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike', 'PerformanceRating', 'RelationshipSatisfaction', 'StockOptionLevel','TotalWorkingYears', 'TrainingTimesLastYear', 'WorkLifeBalance', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager')]
 NewTrain <- train[c('Attrition','Age','DistanceFromHome', 'Education', 'EnvironmentSatisfaction', 'JobInvolvement', 'JobLevel','JobSatisfaction', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike', 'PerformanceRating', 'RelationshipSatisfaction', 'StockOptionLevel','TotalWorkingYears', 'TrainingTimesLastYear', 'WorkLifeBalance', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager')]
 str(NewTrain)
 ncol(NewTrain)
@@ -66,7 +64,7 @@ TestFinal_labels
 #Train the model
 #install.packages("class")
 library(class)
-AttritionTest_pred <- knn(train = TrainFinal, test = TestFinal,cl = TrainFinal_labels, k=19)
+AttritionTest_pred <- knn(train = TrainFinal, test = TestFinal,cl = TrainFinal_labels, k=6)
 AttritionTest_pred
 #table(TestFinal_labels,AttritionTest_pred)
 
@@ -74,6 +72,7 @@ AttritionTest_pred
 #install.packages("gmodels")
 library(gmodels)
 CrossTable(x = TestFinal_labels, y = AttritionTest_pred, prop.chisq = FALSE)
+library(caret)
+confusionMatrix(AttritionTest_pred, TestFinal_labels, dnn = c("Prediction", "Reference"), mode = "sens_spec")
 
-#CONFUSIONMATRIX
-#library(caret)
+#how to reduce false negatives
