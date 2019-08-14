@@ -1,6 +1,7 @@
 
 
 
+
 library(tidyverse) #general data wrangling tools
 library(skimr) #summary stats
 library(tangram) #has is.categorical() function, useful for creating tables
@@ -57,7 +58,7 @@ ncol(TestFinal)
 view(TestFinal)
 skim(TestFinal)
 TrainFinal_labels <-train[TrainObs,3]
-TestFinal_labels <-train[TrainObs, 3]
+TestFinal_labels <-train[-TrainObs, 3]
 TrainFinal_labels
 TestFinal_labels
 
@@ -73,4 +74,3 @@ AttritionTest_pred
 #install.packages("gmodels")
 library(gmodels)
 CrossTable(x = TestFinal_labels, y = AttritionTest_pred, prop.chisq = FALSE)
-
