@@ -74,3 +74,5 @@ AttritionTest_pred
 #install.packages("gmodels")
 library(gmodels)
 CrossTable(x = TestFinal_labels, y = AttritionTest_pred, prop.chisq = FALSE)
+
+#CONFUSIONMATRIX
