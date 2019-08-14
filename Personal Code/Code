@@ -1,5 +1,6 @@
 
 
+
 library(tidyverse) #general data wrangling tools
 library(skimr) #summary stats
 library(tangram) #has is.categorical() function, useful for creating tables
@@ -25,8 +26,9 @@ ncol(train)
 view(train)
 skim(train)
 
+#Remove factored variables and other non-useful variables
 NewTrain <- train[c('Attrition','Age','DistanceFromHome', 'Education', 'EnvironmentSatisfaction', 'JobInvolvement', 'JobLevel','JobSatisfaction', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike', 'PerformanceRating', 'RelationshipSatisfaction', 'StockOptionLevel','TotalWorkingYears', 'TrainingTimesLastYear', 'WorkLifeBalance', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager')]
-names(NewTrain)
+str(NewTrain)
 ncol(NewTrain)
 view(NewTrain)
 skim(NewTrain)
@@ -40,6 +42,7 @@ ncol(trainNorm)
 view(trainNorm)
 skim(NewTrain)
 summary(NewTrain)
+
 #Create Training and Test datasets
 set.seed(1)
 TrainObs=sample(seq(1,dim(trainNorm)[1]), round(.75*dim(trainNorm)[1]), replace = FALSE)
@@ -70,3 +73,4 @@ AttritionTest_pred
 #install.packages("gmodels")
 library(gmodels)
 CrossTable(x = TestFinal_labels, y = AttritionTest_pred, prop.chisq = FALSE)
+
