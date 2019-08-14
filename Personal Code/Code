@@ -76,3 +76,4 @@ library(gmodels)
 CrossTable(x = TestFinal_labels, y = AttritionTest_pred, prop.chisq = FALSE)
 
 #CONFUSIONMATRIX
+#library(caret)
