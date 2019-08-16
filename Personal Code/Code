@@ -1,78 +1,133 @@
-
-library(tidyverse) #general data wrangling tools
-library(skimr) #summary stats
-library(tangram) #has is.categorical() function, useful for creating tables
-library(car) # Regression tools
-library(fastDummies) # creates dummy variables
+#install.packages(c(rsample,h2o,caret,class,gmodels))
+library(tidyverse)
+library(skimr)
+library(tangram)
+library(car)
 library(rlang)
 library(olsrr)
-library(roperators) #used to convert NAs to to different values
+library(roperators)
+library(rsample) 
+library(h2o)
 library(DAAG)
 library(ggplot2)
+#library(expression) #need package
 library(dplyr)
-library(plyr)
-library(readr)
+library(forcats)
+library(gridExtra)
 library(RCurl)
 library(scales)
+library(caret)
+library(class)
+library(gmodels)
+library(corrplot)
+library(stats)
+library(klaR)
 
 
-#Read in dataset
+#read in dataset
 URL <- getURL("https://raw.githubusercontent.com/rmcdaniel-smu/CaseStudy2DDS/master/CaseStudy2-data.csv")
-train <- read.csv(text = URL, sep = ',')
+train_full <- read.csv(text = URL, sep = ',')
 str(train)
 ncol(train)
 view(train)
 skim(train)
 
-#Remove factored variables and other non-useful variables
-##NewTrain <- train[c('Attrition','Age','DistanceFromHome', 'Education', 'EnvironmentSatisfaction', 'JobInvolvement', 'JobLevel','JobSatisfaction', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike', 'PerformanceRating', 'RelationshipSatisfaction', 'StockOptionLevel','TotalWorkingYears', 'TrainingTimesLastYear', 'WorkLifeBalance', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager')]
-NewTrain <- train[c('Attrition','Age','DistanceFromHome', 'Education', 'EnvironmentSatisfaction', 'JobInvolvement', 'JobLevel','JobSatisfaction', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike', 'PerformanceRating', 'RelationshipSatisfaction', 'StockOptionLevel','TotalWorkingYears', 'TrainingTimesLastYear', 'WorkLifeBalance', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager')]
-str(NewTrain)
-ncol(NewTrain)
-view(NewTrain)
-skim(NewTrain)
+#convert variables
+train_full <- train_full %>%
+  mutate(
+    JobLevel = factor(JobLevel),
+    StockOptionLevel = factor(StockOptionLevel),
+    TrainingTimesLastYear = factor(TrainingTimesLastYear)
+  )
 
-#Normalize data
-normalize <-function(x){
-  return((x-min(x))/(max(x)-min(x)))}
-trainNorm <- as.data.frame(lapply(NewTrain[-1], normalize))
-str(trainNorm)
-ncol(trainNorm)
-view(trainNorm)
-skim(NewTrain)
-summary(NewTrain)
+#create Training and Test datasets
+set.seed(85)
+TrainObs=sample(seq(1,dim(train_full)[1]), round(.75*dim(train_full)[1]), replace = FALSE)
+train_data=train_full[TrainObs,]
+cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+train_data <- train_data[,!names(train_data) %in% cols.dont.want, drop = F]
+view(train_data)
+test_data=train_full[-TrainObs,]
+cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+test_data <- test_data[,!names(train_data) %in% cols.dont.want, drop = F]
 
-#Create Training and Test datasets
-set.seed(1)
-TrainObs=sample(seq(1,dim(trainNorm)[1]), round(.75*dim(trainNorm)[1]), replace = FALSE)
-TrainFinal=trainNorm[TrainObs,]
-str(TrainFinal)
-ncol(TrainFinal)
-view(TrainFinal)
-skim(NewTrain)
-TestFinal=trainNorm[-TrainObs,]
-str(TestFinal)
-ncol(TestFinal)
-view(TestFinal)
-skim(TestFinal)
-TrainFinal_labels <-train[TrainObs,3]
-TestFinal_labels <-train[-TrainObs, 3]
-TrainFinal_labels
-TestFinal_labels
+#create Attrition rates
+table(train_data$Attrition) %>% prop.table()
+table(test_data$Attrition) %>% prop.table()
+
+#Attrition Formula
+#C(k)(C(yes) = attrition, C(no) = no attrition)
+#P(Ck|X) = P(Ck)*P(X|Ck) / P(X)
+#P(Ck) = prior probability of the outcome
+#P(X) = probabilityo f the predictor variables
+#P(X|Ck) = conditional probability
+#P(Ck|X) = posterior probability
+#posterior = prior * likelihood / evidence
+
+#Attrition Corrplot
+train_data %>%
+  filter(Attrition == "Yes") %>%
+  select_if(is.numeric) %>%
+  cor() %>%
+  corrplot::corrplot()
+
+#plots for categorical variables
+train_data %>%
+  dplyr::select(Age,DistanceFromHome, Education, MonthlyIncome, NumCompaniesWorked, YearsSinceLastPromotion) %>%
+  gather(metric, value) %>%
+  ggplot(aes(value, fill = metric)) +
+  geom_density(show.legend = FALSE) +
+  facet_wrap(~metric, scales = "free")
 
 
-#Train the model
-#install.packages("class")
-library(class)
-AttritionTest_pred <- knn(train = TrainFinal, test = TestFinal,cl = TrainFinal_labels, k=6)
-AttritionTest_pred
-#table(TestFinal_labels,AttritionTest_pred)
+#tune the data
+features <- setdiff(names(train_data), "Attrition")
+x <- train_data[, features]
+y <- train_data$Attrition
 
-#Evaluate the model
-#install.packages("gmodels")
-library(gmodels)
-CrossTable(x = TestFinal_labels, y = AttritionTest_pred, prop.chisq = FALSE)
-library(caret)
-confusionMatrix(AttritionTest_pred, TestFinal_labels, dnn = c("Prediction", "Reference"), mode = "sens_spec")
+#cross validation 10-fold
+train_control <- trainControl(
+  method = "cv",
+  number = 10
+)
 
-#how to reduce false negatives
+#train the model
+nb.train1 <- train(
+  x = x,
+  y = y,
+  method = "nb",
+  trControl = train_control,
+)
+
+#confusion matrix = m1
+confusionMatrix(nb.train1)
+
+#additional tuning
+search_grid <- expand.grid(
+  usekernel = c(TRUE, FALSE),
+  fL = 0:1,
+  adjust = seq(0, 1, by = 1)
+)
+
+#train new model
+nb.train2 <- train(
+  x = x,
+  y = y,
+  method = "nb",
+  trControl = train_control,
+  tuneGrid = search_grid,
+  preProcess = c("BoxCox", "center", "scale", "pca")
+)
+
+#top 5 models
+#nb.m2$results %>%
+  top_n(5, wt = Accuracy) %>%
+  arrange(desc(Accuracy))
+plot(nb.train2)
+
+#confusion matrix = m2
+confusionMatrix(nb.train2)
+
+#sensitivity & specificity
+pred <- predict(nb.m2, newdata = test_data)
+confusionMatrix(pred, test_data$Attrition)
