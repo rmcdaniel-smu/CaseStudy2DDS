@@ -1,0 +1,290 @@
+#Exploratory Data Analysis
+##Here we will look at different variables to see how the relationship to attrition.  
+##Reviewing the data through visual graphs will help us determine variables that have impact on attrition.
+
+
+#Attrition vs Age
+ggplot(train, aes(x = Age, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Age") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=Age)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format())
+
+#Attrition vs BusinessTravel
+ggplot(train, aes(x = BusinessTravel, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Business Travel") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=BusinessTravel)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format())
+
+
+#Attrition vs DailyRate
+ggplot(train, aes(x = DailyRate, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Daiy Rate") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=DailyRate)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format())
+
+#Attrition vs Department
+ggplot(train, aes(x = Department, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Department") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=Department)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs DistanceFromHome
+ggplot(train, aes(x = DistanceFromHome, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Distance From Home") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=DistanceFromHome)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_y_continuous(labels=percent_format())
+
+
+#Attrition vs Education
+ggplot(train, aes(x = Education, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Education") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=Education)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs EducationField
+ggplot(train, aes(x = EducationField, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Education Field") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=EducationField)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+
+#Attrition vs EnvironmentSatisfaction
+ggplot(train, aes(x = EnvironmentSatisfaction, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Environment Satisfaction") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=EnvironmentSatisfaction)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format())
+
+#Attrition vs Gender
+ggplot(train, aes(x = Gender, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Gender") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=Gender)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format())
+
+#Attrition vs HourlyRate
+ggplot(train, aes(x = HourlyRate, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Hourly Rate") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=HourlyRate)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs JobInvolvement
+ggplot(train, aes(x = JobInvolvement, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Job Involvement") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=JobInvolvement)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_color_viridis_d(palette) +
+  scale_y_continuous(labels=percent_format())
+
+##Attrition vs JobLevel
+ggplot(train, aes(x = JobLevel, fill=Attrition)) +
+  stat_count(width = 0,5) +
+  xlab("Job Level") +
+  ylab("Count") +
+  labs(fill="Attrition")
+ggplot(train, aes(x=JobLevel)) + geom_bar(aes(fill=Attrition),position='fill') +
+  scale_y_continuous(labels=percent_format())
+
+#Attrition vs JobRole
+ggplot(train,aes(JobRole,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Job Role") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = JobRole)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs JobSatisfaction
+ggplot(train,aes(JobSatisfaction,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Job Satisfaction") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = JobSatisfaction)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+
+#Attrition vs MaritalStatus
+ggplot(train,aes(MaritalStatus,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Marital Status") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = MaritalStatus)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs MonthlyIncome
+ggplot(train,aes(MonthlyIncome,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Monthly Income") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = MonthlyIncome)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs MonthlyRate
+ggplot(train,aes(MonthlyRate,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Monthly Rate") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = MonthlyRate)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format()) +
+  theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs NumCompaniesWorked
+ggplot(train,aes(NumCompaniesWorked,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Num Companies Worked") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = NumCompaniesWorked)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs OverTime
+ggplot(train,aes(OverTime,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Over Time") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = OverTime)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs PercentSalaryHike
+ggplot(train,aes(PercentSalaryHike,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Percent Salary Hike") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = PercentSalaryHike)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs PerformanceRating
+ggplot(train,aes(PerformanceRating,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Performance Rating") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = PerformanceRating)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs RelationshipSatisfaction
+ggplot(train,aes(RelationshipSatisfaction,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Relationship Satisfaction") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = RelationshipSatisfaction)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+
+#Attrition vs StockOptionLevel
+ggplot(train,aes(StockOptionLevel,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Stock Option Level") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = StockOptionLevel)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs TotalWorkingYears
+ggplot(train,aes(TotalWorkingYears,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Total Working Years") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = TotalWorkingYears)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs WorkLifeBalance
+ggplot(train,aes(WorkLifeBalancefill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("WorkLifeBalance") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = WorkLifeBalance)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsAtCompany
+ggplot(train,aes(YearsAtCompany,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Years at Company") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = YearsAtCompany)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsInCurrentRole
+ggplot(train,aes(YearsInCurrentRole,fill=Attrition)) +
+    stat_count(width = 0.5) +
+    xlab("Years in Current Role") +
+    ylab("Count") +
+    labs(fill=Attrition)
+ggplot(train,aes(x = YearsInCurrentRole)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+    scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsSinceLastPromotion
+ggplot(train,aes(YearsSinceLastPromotion,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Years Since Last Promotion") +
+  ylab("Count") +
+  labs(fill=Attrition)
+ggplot(train,aes(x = YearsSinceLastPromotion)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsWithCurrManager
+ggplot(train,aes(YearsWithCurrManager,fill=Attrition)) +
+  stat_count(width = 0.5) +
+  xlab("Years With Current Manager") +
+  ylab("Count") +
+  theme_classic() + scale_fill_hue(guide = 'none') +
+  labs(fill=Attrition)
+ggplot(train,aes(x = YearsWithCurrManager)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+  scale_y_continuous(labels = percent_format())
+
