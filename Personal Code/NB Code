@@ -1,0 +1,101 @@
+
+#Sensitivity & Specificity
+newtrain <-train_full[c('Attrition','Age','JobInvolvement','OverTime','RelationshipSatisfaction')]
+
+#CVPress - create Training and Test datasets
+set.seed(849)
+TrainObs=sample(seq(1,dim(newtrain)[1]), round(.75*dim(newtrain)[1]), replace = FALSE)
+train_data=newtrain[TrainObs,]
+cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+train_data <- train_data[,!names(train_data) %in% cols.dont.want, drop = F]
+#view(train_data)
+test_data=newtrain[-TrainObs,]
+cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+test_data <- test_data[,!names(train_data) %in% cols.dont.want, drop = F]
+ncol(test_data)
+
+#create Attrition rates
+table(train_data$Attrition) %>% prop.table()
+table(test_data$Attrition) %>% prop.table()
+
+
+
+#Attrition Formula
+#C(k)(C(yes) = attrition, C(no) = no attrition)
+#P(Ck|X) = P(Ck)*P(X|Ck) / P(X)
+#P(Ck) = prior probability of the outcome
+#P(X) = probabilityo f the predictor variables
+#P(X|Ck) = conditional probability
+#P(Ck|X) = posterior probability
+#posterior = prior * likelihood / evidence
+
+#Attrition Corrplot
+train_data %>%
+  filter(Attrition == "Yes") %>%
+  select_if(is.numeric) %>%
+  cor() %>%
+  corrplot::corrplot()
+
+#plots for categorical variables
+train_data %>%
+  dplyr::select(Age,DistanceFromHome, Education, MonthlyIncome, NumCompaniesWorked, YearsSinceLastPromotion) %>%
+  gather(metric, value) %>%
+  ggplot(aes(value, fill = metric)) +
+  geom_density(show.legend = FALSE) +
+  facet_wrap(~metric, scales = "free")
+
+
+#tune the data
+features <- setdiff(names(train_data), "Attrition")
+x <- train_data[, features]
+y <- train_data$Attrition
+
+#cross validation 10-fold
+train_control <- trainControl(
+  method = "cv",
+  number = 10
+)
+
+#train the model
+nb.train1 <- train(
+  x = x,
+  y = y,
+  method = "nb",
+  trControl = train_control,
+)
+
+#confusion matrix = m1
+pred <- predict(nb.train1, newdata = test_data)
+confusionMatrix(pred, test_data$Attrition)
+
+
+#additional tuning if needed
+search_grid <- expand.grid(
+  usekernel = c(TRUE, FALSE),
+  fL = 0:1,
+  adjust = seq(1, 2, by = 1)
+)
+
+#train new model
+nb.train2 <- train(
+  x = x,
+  y = y,
+  method = "nb",
+  trControl = train_control,
+  tuneGrid = search_grid,
+  preProcess = c("BoxCox", "center", "scale", "pca")
+)
+
+#top 5 models
+nb.train2$results %>%
+  top_n(5, wt = Accuracy) %>%
+  arrange(desc(Accuracy))
+plot(nb.train2)
+
+#confusion matrix = m2
+confusionMatrix(nb.train2)
+
+#sensitivity & specificity
+pred <- predict(nb.train2, newdata = test_data)
+confusionMatrix(pred, test_data$Attrition)
+
