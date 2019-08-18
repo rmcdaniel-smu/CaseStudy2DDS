@@ -1,0 +1,42 @@
+
+
+#convert variables
+train <- train %>%
+  mutate(
+    JobLevel = factor(JobLevel),
+    StockOptionLevel = factor(StockOptionLevel),
+    TrainingTimesLastYear = factor(TrainingTimesLastYear)
+  )
+#convert to numeric
+#Attrition
+#1=No
+#2=Yes
+#AttritionFactor %>% skim
+Attrition.n<-as.numeric(train$Attrition)
+Attrition.n
+
+
+
+#BusinessTravel
+#1=Non-Travel
+#2=Travel_Frequently
+#3=Travel_Rarely
+BusinessTravel.n<-as.numeric(train$BusinessTravel)
+
+
+#Department
+#1=Human Resources
+#2=Research & Development
+#3=Sales
+Department.n<-as.numeric(train$Department)
+
+#additional convertions
+train$Education <-as.factor(train$Education)
+train$EnvironmentSatisfaction <- as.factor(train$EnvironmentSatisfaction)
+train$JobInvolvement <- as.factor(train$JobInvolvement)
+train$JobSatisfaction <- as.factor(train$JobSatisfaction)
+train$PerformanceRating <- as.factor(train$PerformanceRating)
+train$RelationshipSatisfaction <- as.factor(train$RelationshipSatisfaction)
+train$WorkLifeBalance <- as.factor(train$WorkLifeBalance)
+train$JobLevel <- as.factor(train$JobLevel)
+train$StockOptionLevel <-as.factor(train$StockOptionLevel)
