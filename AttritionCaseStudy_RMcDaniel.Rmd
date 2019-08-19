@@ -1,0 +1,550 @@
+---
+title: "AttritionCaseStudy_RMcDaniel"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+#library(tidyverse)
+#library(skimr)
+#library(tangram)
+#library(car)
+#library(rlang)
+#library(olsrr)
+#library(roperators)
+#library(rsample) 
+#library(DAAG)
+#library(ggplot2)
+#library(dplyr)
+#library(gridExtra)
+#library(RCurl)
+#library(scales)
+#library(caret)
+#library(class)
+#library(gmodels)
+#library(corrplot)
+#library(stats)
+#library(psych)
+#library(klaR)
+#library(qpcR)
+
+
+#read in dataset
+#URL <- getURL("https://raw.githubusercontent.com/rmcdaniel-smu/CaseStudy2DDS/master/CaseStudy2-data.csv")
+#train <- read.csv(text = URL, sep = ',')
+#str(train)
+#ncol(train)
+#view(train)
+#skim(train)
+
+#URL3 <- getURL("https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/UNIT%2014/CaseStudy2CompSet%20No%20Attrition.csv")
+#CaseStudy2CompSetNoAttrition <- read.csv(text = URL3, sep = ',')
+
+
+
+#check for linearity on nomial variables
+#search nominal variables
+#attrit_train=train%>% select(2,4,5,7,14,20,21,22,30,31,34,35,36)
+#check correlation
+#pairs.panels(attrit_train, col='red')
+#create new data for stepwise
+#modeldata = train%>% select(2,3,4,6,8,9,12,13,15,16,17,18,19,20,22,24,25,26,27,28,29,30,31,34)
+#view(modeldata)
+
+#modeldata1=modeldata%>%mutate(AttritionYN=ifelse(modeldata$Attrition=='Yes', 1,0))
+#names(modeldata1) 
+
+#modeldata2 = modeldata1%>%select(1, 3:19, 21:25)
+#names(modeldata1)
+
+
+#build model for Salary
+#URL4 <- getURL("https://raw.githubusercontent.com/rmcdaniel-smu/CaseStudy2DDS/master/CaseStudy2CompSet%20No%20Salary.csv")
+#CaseStudy2CompSetNoSalary <- read.csv(text = URL4, sep = ',')
+
+
+#salary_train=train%>% select(2,4,22,31,34)
+#check correlation
+#pairs.panels(salary_train, col='red')
+
+#salary.lm <- lm(MonthlyIncome~.,modeldata2)
+#summary(salary.lm)
+#stepAIC(salary.lm, direction = "both")
+
+#newSalary.lm <-lm(formula = MonthlyIncome ~ BusinessTravel + Gender + JobLevel + 
+#JobRole + PercentSalaryHike + PerformanceRating + TotalWorkingYears, 
+#data = modeldata2)
+#summary(newSalary.lm)
+#plot(newSalary.lm)
+
+#obtain prediction values
+#pred1 <- predict(newSalary.lm, newdata = train)
+#View(pred1)
+#RMSE = function(m,0){
+#sqrt(mean((m-o)^2))}
+#predRMSE <-RMSE(train$MonthlyIncome, pred1)
+#predRMSE
+ #RMSE = 
+#write pred1 to csv
+#write.csv(pred1, file = "mlr_prediction.csv")
+#getwd()
+#RMSE (newAttrit.lm)
+#summary(aov(newSalary.lm))
+
+
+#Exploratory Data Analysis
+##Here we will look at different variables to see how the relationship to attrition.  
+##Reviewing the data through visual graphs will help us determine variables that have impact on attrition.
+
+
+#Attrition vs Age
+#ggplot(train, aes(x = Age, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Age") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=Age)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format())
+
+#Attrition vs BusinessTravel
+#ggplot(train, aes(x = BusinessTravel, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Business Travel") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=BusinessTravel)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format())
+
+
+#Attrition vs DailyRate
+#ggplot(train, aes(x = DailyRate, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Daiy Rate") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=DailyRate)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format())
+
+#Attrition vs Department
+#ggplot(train, aes(x = Department, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Department") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=Department)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format()) +
+#theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs DistanceFromHome
+#ggplot(train, aes(x = DistanceFromHome, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Distance From Home") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=DistanceFromHome)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_y_continuous(labels=percent_format())
+
+
+#Attrition vs Education
+#ggplot(train, aes(x = Education, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Education") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=Education)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format()) +
+#theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs EducationField
+#ggplot(train, aes(x = EducationField, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Education Field") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=EducationField)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format()) +
+#theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+
+#Attrition vs EnvironmentSatisfaction
+#ggplot(train, aes(x = EnvironmentSatisfaction, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Environment Satisfaction") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=EnvironmentSatisfaction)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format())
+
+#Attrition vs Gender
+#ggplot(train, aes(x = Gender, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Gender") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=Gender)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format())
+
+#Attrition vs HourlyRate
+#ggplot(train, aes(x = HourlyRate, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Hourly Rate") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=HourlyRate)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format()) +
+#theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs JobInvolvement
+#ggplot(train, aes(x = JobInvolvement, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Job Involvement") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=JobInvolvement)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_color_viridis_d(palette) +
+#scale_y_continuous(labels=percent_format())
+
+##Attrition vs JobLevel
+#ggplot(train, aes(x = JobLevel, fill=Attrition)) +
+#stat_count(width = 0,5) +
+#xlab("Job Level") +
+#ylab("Count") +
+#labs(fill="Attrition")
+#ggplot(train, aes(x=JobLevel)) + geom_bar(aes(fill=Attrition),position='fill') +
+#scale_y_continuous(labels=percent_format())
+
+#Attrition vs JobRole
+#ggplot(train,aes(JobRole,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Job Role") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = JobRole)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format()) +
+#theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs JobSatisfaction
+#ggplot(train,aes(JobSatisfaction,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Job Satisfaction") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = JobSatisfaction)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+
+#Attrition vs MaritalStatus
+#ggplot(train,aes(MaritalStatus,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Marital Status") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = MaritalStatus)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format()) +
+
+#Attrition vs MonthlyIncome
+#ggplot(train,aes(MonthlyIncome,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Monthly Income") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = MonthlyIncome)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format()) +
+#theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs MonthlyRate
+#ggplot(train,aes(MonthlyRate,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Monthly Rate") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = MonthlyRate)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format()) +
+#theme(axis.text.x = element_text(angle = 90,hjust = 0,vjust = 0.5))
+
+#Attrition vs NumCompaniesWorked
+#ggplot(train,aes(NumCompaniesWorked,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Num Companies Worked") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = NumCompaniesWorked)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs OverTime
+#ggplot(train,aes(OverTime,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Over Time") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = OverTime)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs PercentSalaryHike
+#ggplot(train,aes(PercentSalaryHike,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Percent Salary Hike") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = PercentSalaryHike)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs PerformanceRating
+#ggplot(train,aes(PerformanceRating,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Performance Rating") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = PerformanceRating)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs RelationshipSatisfaction
+#ggplot(train,aes(RelationshipSatisfaction,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Relationship Satisfaction") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = RelationshipSatisfaction)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+
+#Attrition vs StockOptionLevel
+#ggplot(train,aes(StockOptionLevel,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Stock Option Level") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = StockOptionLevel)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs TotalWorkingYears
+#ggplot(train,aes(TotalWorkingYears,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Total Working Years") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = TotalWorkingYears)) + geom_bar(aes(fill=Attrition),position = 'fill')+
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs TrainingTimesLastYear
+#ggplot(train,aes(TrainingTimesLastYear,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Total Working Years") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = TrainingTimesLastYear)) + geom_bar(aes(fill=Attrition),position = 'fill')+
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs WorkLifeBalance
+#ggplot(train,aes(WorkLifeBalancefill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("WorkLifeBalance") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = WorkLifeBalance)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsAtCompany
+#ggplot(train,aes(YearsAtCompany,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Years at Company") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = YearsAtCompany)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsInCurrentRole
+#ggplot(train,aes(YearsInCurrentRole,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Years in Current Role") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = YearsInCurrentRole)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsSinceLastPromotion
+#ggplot(train,aes(YearsSinceLastPromotion,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Years Since Last Promotion") +
+#ylab("Count") +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = YearsSinceLastPromotion)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+#Attrition vs YearsWithCurrManager
+#ggplot(train,aes(YearsWithCurrManager,fill=Attrition)) +
+#stat_count(width = 0.5) +
+#xlab("Years With Current Manager") +
+#ylab("Count") +
+#theme_classic() + scale_fill_hue(guide = 'none') +
+#labs(fill=Attrition)
+#ggplot(train,aes(x = YearsWithCurrManager)) + geom_bar(aes(fill=Attrition),position = 'fill') +
+#scale_y_continuous(labels = percent_format())
+
+
+#Attrition Corr Plot
+#train %>%
+#filter(Attrition =="Yes") %>%
+#select_if(is.numeric) %>%
+#cor() %>%
+#corrplot::corrplot()
+
+
+#Sensitivity & Specificity
+#newtrain <-train[c('Attrition','JobLevel','OverTime')]
+
+#CVPress - create Training and Test datasets
+#set.seed(849)
+#TrainObs=sample(seq(1,dim(newtrain)[1]), round(.75*dim(newtrain)[1]), replace = FALSE)
+#train_data=newtrain[TrainObs,]
+#cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+#train_data <- train_data[,!names(train_data) %in% cols.dont.want, drop = F]
+#view(train_data)
+#test_data=newtrain[-TrainObs,]
+#cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+#test_data <- test_data[,!names(train_data) %in% cols.dont.want, drop = F]
+#ncol(test_data)
+
+#create Attrition rates
+#table(train_data$Attrition) %>% prop.table()
+#table(test_data$Attrition) %>% prop.table()
+
+
+#Attrition Formula
+#C(k)(C(yes) = attrition, C(no) = no attrition)
+#P(Ck|X) = P(Ck)*P(X|Ck) / P(X)
+#P(Ck) = prior probability of the outcome
+#P(X) = probabilityo f the predictor variables
+#P(X|Ck) = conditional probability
+#P(Ck|X) = posterior probability
+#posterior = prior * likelihood / evidence
+
+#Attrition Corrplot
+#train_data %>%
+  #filter(Attrition == "Yes") %>%
+  #select_if(is.numeric) %>%
+  #cor() %>%
+  #corrplot::corrplot()
+
+#plots for categorical variables
+#train_data %>%
+#dplyr::select(Age,DistanceFromHome, Education, MonthlyIncome, NumCompaniesWorked, #YearsSinceLastPromotion) %>%
+#gather(metric, value) %>%
+#ggplot(aes(value, fill = metric)) +
+#geom_density(show.legend = FALSE) +
+#facet_wrap(~metric, scales = "free")
+
+
+#tune the data
+#features <- setdiff(names(train_data), "Attrition")
+#x <- train_data[, features]
+#y <- train_data$Attrition
+
+#cross validation 10-fold
+#train_control <- trainControl(
+  #method = "cv",
+  #number = 10
+#)
+
+#train the model
+#nb.train1 <- train(
+  #x = x,
+  #y = y,
+  #method = "nb",
+  #trControl = train_control,
+#)
+
+#confusion matrix = m1
+#pred <- predict(nb.train1, newdata = test_data)
+#confusionMatrix(pred, test_data$Attrition)
+
+#Retain using CaseStudy2CompSet_No_Attrition
+
+
+#BSURL <- getURL('https://raw.githubusercontent.com/BivinSadler/MSDS-6306-Doing-Data-Science/master/UNIT%2014/CaseStudy2CompSet%20No%20Attrition.csv')
+#AttritComp <- read.csv(text = BSURL, sep = ',')
+
+
+#Sensitivity & Specificity
+#BSAtrritnewtrain <-AttritComp[c('JobLevel','OverTime')]
+
+#CVPress - create Training and Test datasets
+#set.seed(149)
+#TrainObs1=sample(seq(1,dim(BSAtrritnewtrain)[1]), round(.75*dim(BSAtrritnewtrain)[1]), replace = FALSE)
+#train_data1=BSAtrritnewtrain[TrainObs1,]
+#cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+#train_data1 <- train_data1[,!names(train_data1) %in% cols.dont.want, drop = F]
+#view(train_data)
+#test_data1=BSAtrritnewtrain[-TrainObs1,]
+#cols.dont.want <- c("ID", "EmployeeCount", "StandardHours")
+#test_data1 <- test_data1[,!names(train_data1) %in% cols.dont.want, drop = F]
+#ncol(test_data1)
+
+#create Attrition rates
+#table(train_data1$Attrition) %>% prop.table()
+#table(test_data1$Attrition) %>% prop.table()
+
+
+#Attrition Formula
+#C(k)(C(yes) = attrition, C(no) = no attrition)
+#P(Ck|X) = P(Ck)*P(X|Ck) / P(X)
+#P(Ck) = prior probability of the outcome
+#P(X) = probabilityo f the predictor variables
+#P(X|Ck) = conditional probability
+#P(Ck|X) = posterior probability
+#posterior = prior * likelihood / evidence
+
+#Attrition Corrplot
+#train_data %>%
+#filter(Attrition == "Yes") %>%
+#select_if(is.numeric) %>%
+#cor() %>%
+#corrplot::corrplot()
+
+#plots for categorical variables
+#train_data %>%
+#dplyr::select(Age,DistanceFromHome, Education, MonthlyIncome, NumCompaniesWorked, #YearsSinceLastPromotion) %>%
+#gather(metric, value) %>%
+#ggplot(aes(value, fill = metric)) +
+#geom_density(show.legend = FALSE) +
+#facet_wrap(~metric, scales = "free")
+
+
+#tune the data
+#features <- setdiff(names(train_data), "Attrition")
+#x <- train_data[, features]
+#y <- train_data$Attrition
+
+#cross validation 10-fold
+#train_control <- trainControl(
+  #method = "cv",
+  #number = 10
+#)
+
+#train the model
+#nb.train1 <- train(
+  #x = x,
+  #y = y,
+  #method = "nb",
+  #trControl = train_control,
+#)
+
+#confusion matrix = m1
+#pred <- predict(nb.train1, newdata = test_data)
+#confusionMatrix(pred, test_data$Attrition)
+
+#YouTube link here
+#https://youtu.be/YCIK81iB5Yk
+
+
+
+```
+
